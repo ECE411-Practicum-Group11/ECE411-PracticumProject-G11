@@ -5,17 +5,17 @@
   - Phone: (360) 773 - 7279
   - Major: Electrical Engineering
 
-2. 
+2. Ryne Shelton
   - Email: 
   - Phone: 
   - Major: 
   
-3. 
+3. Charles Nasser
   - Email:
   - Phone: 
   - Major: 
   
-4. 
+4. Cesar Ordaz-Coronel
   - Email:
   - Phone: 
   - Major:
