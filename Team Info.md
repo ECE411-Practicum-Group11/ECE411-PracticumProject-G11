@@ -1,21 +1,21 @@
 ## ECE 411 Practicum - Group 11 Member Info
 
-1. Anthony Bruno
+1. <ins> Anthony Bruno </ins>
   - Email: brunoan@pdx.edu
   - Phone: (360) 773 - 7279
   - Major: Electrical Engineering
 
-2. Ryne Shelton
+2. <ins> Ryne Shelton </ins>
   - Email: 
   - Phone: 
   - Major: 
   
-3. Charles Nasser
+3. <ins> Charles Nasser </ins>
   - Email:
   - Phone: 
   - Major: 
   
-4. Cesar Ordaz-Coronel
+4. <ins> Cesar Ordaz-Coronel </ins>
   - Email:
   - Phone: 
   - Major:
