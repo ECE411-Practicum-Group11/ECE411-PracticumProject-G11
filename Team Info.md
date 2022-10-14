@@ -6,16 +6,16 @@
   - Major: Electrical Engineering
 
 2. <ins> Ryne Shelton </ins>
-  - Email: 
+  - Email: ryn2@pdx.edu
   - Phone: 
-  - Major: 
+  - Major: Computer Engineering
   
 3. <ins> Charles Nasser </ins>
-  - Email:
+  - Email: cnasser@pdx.edu
   - Phone: 
   - Major: 
   
 4. <ins> Cesar Ordaz-Coronel </ins>
-  - Email:
+  - Email: cordaz2@pdx.edu
   - Phone: 
   - Major:
