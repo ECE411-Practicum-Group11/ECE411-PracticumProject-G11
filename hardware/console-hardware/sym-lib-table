@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "U-ATMEGA32U4-AU")(type "KiCad")(uri "${KIPRJMOD}/U-ATMEGA32U4-AU.kicad_sym")(options "")(descr ""))
+)
