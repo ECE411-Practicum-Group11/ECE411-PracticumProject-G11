@@ -4,18 +4,13 @@
   - Email: brunoan@pdx.edu
   - Phone: (360) 773 - 7279
   - Major: Electrical Engineering
-
-2. <ins> Ryne Shelton </ins>
-  - Email: ryn2@pdx.edu
-  - Phone: 
-  - Major: Computer Engineering
   
-3. <ins> Charles Nasser </ins>
+2. <ins> Charles Nasser </ins>
   - Email: cnasser@pdx.edu
   - Phone: 
   - Major: 
   
-4. <ins> Cesar Ordaz-Coronel </ins>
+3. <ins> Cesar Ordaz-Coronel </ins>
   - Email: cordaz2@pdx.edu
   - Phone: 
   - Major:
