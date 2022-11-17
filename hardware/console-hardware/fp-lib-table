@@ -2,4 +2,5 @@
   (lib (name "Pushbutton")(type "KiCad")(uri "${KIPRJMOD}/Pushbutton.pretty")(options "")(descr ""))
   (lib (name "SW-EG1213")(type "KiCad")(uri "${KIPRJMOD}/SW-EG1213.pretty")(options "")(descr ""))
   (lib (name "USB-Conn")(type "KiCad")(uri "${KIPRJMOD}/USB-Conn")(options "")(descr ""))
+  (lib (name "Testpoints")(type "KiCad")(uri "${KIPRJMOD}/Testpoints.pretty")(options "")(descr ""))
 )
