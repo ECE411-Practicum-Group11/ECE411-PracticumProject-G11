@@ -7,9 +7,9 @@ Fall 2022 ECE 411 Practicum Project
 
 # Handheld Video Game Console - Project Overview
 ## Description:
-This practicum project is for the development of a **Handheld Video Game Console**. This device has buttons for users to interact with the device and view game graphics/animations on the console's display. This device was designed for beginner electronics users who want to code their own games. The handheld game console is a portabe device with a simple interface for users.
+This practicum project is for the development of a **Handheld Video Game Console**. This gaming device has buttons for users to interact with the device electronics and view game graphics/animations on the console's display. This device was designed for beginner-electronics users who want to code their own games (also build/modify/customize their own portable game console). The handheld game console is a portabe device with a simple interface for users.
 
-The device  [short technical details]
+This handheld game console was designed with a simple user interface and at a affortable cost. The device contains 4 direction/navigation buttons, 2 action buttons, power switch, and a [QWIIC I2C](https://www.sparkfun.com/qwiic) connector for adding accessory sensors and devices such as an [accelerometer](https://www.sparkfun.com/products/17589) for motion control with the Handheld Video Game Console. The system uses a 3.7V 2000mah LiPo battery that is rechargable through the USB connection. The USB connection serves to not only charge the LiPo battery but also for user to upload their own coded games. This device uses the Arduino IDE (Processing language) to code games and upload/interact with the system electronics hardware.
 
 ## Overview of Repository Folders/Files/Sections
 
