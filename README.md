@@ -28,6 +28,7 @@ For more system architecture details, go to the [411documents](https://github.co
 ## Videos & Photos
 
 ## License
+The current license of this practicum project is CREATIVE COMMONS ZERO V1.0 UNIVERSAL. This is an Open-Source License and this project is dedicated to the public domain. This project can be copied, modified, distributed, and performance of work (including commercial purposes) without asking for permission. For more information on CC0 1.0 Universal - Public Domain Dedication, please follow this link: https://creativecommons.org/publicdomain/zero/1.0/\
 
 ## How to Download Project & Tools to Use
 
