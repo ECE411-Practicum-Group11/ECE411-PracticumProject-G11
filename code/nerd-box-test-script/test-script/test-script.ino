@@ -10,27 +10,26 @@
 #define DISPLAY_CS 6
 #define DISPLAY_DC 11
 #define DISPLAY_RST 10
-#define SCK PORTB1
-#define MOSI PORTB2
-#define MISO PORTB3
-#define BUTTON_LEFT 19
-#define BUTTON_UP 18
-#define BUTTON_RIGHT 17
-#define BUTTON_DOWN 16
-#define BUTTON_A 15
-#define BUTTON_B 14
+#define BUTTON_LEFT A5
+#define BUTTON_UP A4
+#define BUTTON_RIGHT A3
+#define BUTTON_DOWN A2
+#define BUTTON_A A1
+#define BUTTON_B A0
 
 // Initialize display object
 Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_CS, DISPLAY_DC, MOSI, SCK, DISPLAY_RST, MISO);
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(19200);
   tft.begin();
   
   // Print debug text to serial monitor and dispaly
   Serial.println("Nerd Box test script v1.0");  
+  tft.setRotation(3);
+  tft.fillScreen(0x0000);
   tft.setCursor(20, 20); // Cursor near top left corner
-  tft.setTextColor(0xF800); // Red
+  tft.setTextColor(0xF800, 0x0000); // Red with black fill
   tft.println("Nerd Box test script v1.0");
   tft.println();
 
@@ -66,32 +65,32 @@ void loop() {
 
   if (checkButton(BUTTON_UP, &upPress, &upTime)) {
     Serial.println("Up");
-    tft.println("Up");
+    tft.println("Up      ");
   }
 
   if (checkButton(BUTTON_RIGHT, &rightPress, &rightTime)) {
     Serial.println("Right");
-    tft.println("Right");
+    tft.println("Right  ");
   }
 
   if (checkButton(BUTTON_DOWN, &downPress, &downTime)) {
     Serial.println("Down");
-    tft.println("Down");
+    tft.println("Down   ");
   }
 
   if (checkButton(BUTTON_LEFT, &leftPress, &leftTime)) {
     Serial.println("Left");
-    tft.println("Left");
+    tft.println("Left    ");
   }
 
   if (checkButton(BUTTON_A, &aPress, &aTime)) {
     Serial.println("A");
-    tft.println("A");
+    tft.println("A       ");
   }
 
   if (checkButton(BUTTON_B, &bPress, &bTime)) {
     Serial.println("B");
-    tft.println("B");
+    tft.println("B      ");
   }
 
 }
@@ -107,12 +106,13 @@ byte checkButton(int pinNumber, byte *buttonPress, unsigned long *buttonTime) {
     *buttonTime = millis();
   }
 
-  if ((millis() - *buttonTime) > 100) {
+  if ((millis() - *buttonTime) > 50) {
     // Change button state after debounce period
     *buttonPress = buttonInput;
 
-      if(*buttonPress == HIGH) {
+      if(*buttonPress == LOW) {
         // Return true if button is pressed after debounce period
+        tft.setCursor(20, 40);
         return 1;
       }
   }
