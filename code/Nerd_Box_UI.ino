@@ -9,12 +9,12 @@
 #define DISPLAY_CS 6
 #define DISPLAY_DC 11
 #define DISPLAY_RST 10
-#define BUTTON_LEFT 19
-#define BUTTON_UP 18
-#define BUTTON_RIGHT 17
-#define BUTTON_DOWN 16
-#define BUTTON_A 15
-#define BUTTON_B 14
+#define BUTTON_LEFT A5
+#define BUTTON_UP A4
+#define BUTTON_RIGHT A3
+#define BUTTON_DOWN A2
+#define BUTTON_A A1
+#define BUTTON_B A0
 
 // Initialize display object
 Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_CS, DISPLAY_DC, MOSI, SCK, DISPLAY_RST, MISO);
@@ -67,13 +67,11 @@ void mainMenu() {
 }
 
 void runGame() {
-  while (true) {
-    if (gameSelect == 1) {
-      FloppyDerp();
+  if (gameSelect == 1) {
+    FloppyDerp();
   }
   else if (gameSelect == 2) { // Play your own game!
     YourGame1();
-  }
   }
 }
 
