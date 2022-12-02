@@ -1,6 +1,6 @@
 Fall 2022 ECE 411 Practicum Project 
 Group 11: ....
 
-# Portable Video Game Console - Project Overview:
+# Portable Video Game Console - Project Overview
 
 ...
