@@ -25,7 +25,7 @@ This handheld game console was designed with a simple user interface and at a af
 
 * code - This folder contains any code that was generated to run the device, test the device, and debug the device during development. The software in this folder includes test programs, UI code for user, prototype code, and device video game code examples.
 
-* hardware/console-hardware - ....
+* hardware/console-hardware - This folder contains all electrical schematics, PCB layout, components, CAD project, and mechanical CAD files. This is the main folder for DIY building, fabrication, modifications, or reworking this prjoect.
 
 * media - this folder contains all media related to this project. This includes test videos, debugging videos, test images and protoype images, demonstration videos, photos, etc.
 
