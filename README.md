@@ -13,7 +13,7 @@ This handheld game console was designed with a simple user interface and at a af
 
 ## Overview of Repository Folders/Files/Sections
 
-* 411documents
+* 411documents - contains all documentation for the this project over the course of 10 weeks. This folder contains Level 1 and Level 0 functional decomposition block diagrams for the device, Bill of Materials, Proposed project schedule (Ghantt Chart), Test plans, project ideas, the Product Design Specification (PDS), and a schematic and PCB layoutfor the device electronics.
 * code
 * hardware/console-hardware
 * prototype
