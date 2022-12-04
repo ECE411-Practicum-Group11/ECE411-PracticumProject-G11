@@ -25,9 +25,9 @@ This handheld game console was designed with a simple user interface and at a af
 
 * code - This folder contains any code that was generated to run the device, test the device, and debug the device during development. The software in this folder includes test programs, UI code for user, prototype code, and device video game code examples.
 
-* hardware/console-hardware
+* hardware/console-hardware - ....
 
-* prototype - This folder just contains prototype information. Really, it only contains a photograph of our 
+* media - this folder contains all media related to this project. This includes test videos, debugging videos, test images and protoype images, demonstration videos, photos, etc.
 
 * LICENSE file - The current license of this practicum project is CREATIVE COMMONS ZERO V1.0 UNIVERSAL. This is an Open-Source License and this project is dedicated to the public domain. This project can be copied, modified, distributed, and performance of work (including commercial purposes) without asking for permission. For more information on CC0 1.0 Universal - Public Domain Dedication, please follow this link: https://creativecommons.org/publicdomain/zero/1.0/
 
@@ -42,7 +42,7 @@ For more system architecture details, go to the [411documents](https://github.co
   <img src="https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/blob/main/411documents/toplevel(level0)blockdiagram.drawio.png">
 </p>
 
-## Testing & Operation Videos/Demos
+## Demonstration & Operations Video
 ...
 
 
