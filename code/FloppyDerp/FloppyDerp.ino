@@ -1,3 +1,4 @@
+
 #include <SPI.h>
 
 // Pin number macro definitions
@@ -18,6 +19,7 @@
 #define MAGENTA  0xF81F
 #define YELLOW   0xFFE0 
 #define WHITE    0xFFFF
+#define SKY      0x6DFE
 
 // From the PDQ_GFX config file found in the library's repo
 #define    ILI9341_CS_PIN               6            
@@ -29,8 +31,11 @@
 
 #include <PDQ_GFX.h>
 #include <PDQ_ILI9341.h>
+#include <Adafruit_FT6206.h>
 
 PDQ_ILI9341 tft;
+Adafruit_FT6206 ts = Adafruit_FT6206();
+unsigned long int timesTouched = 0;
 
 // Sprite bit map
 const PROGMEM uint8_t ballBitMap[21 * 21] = {
@@ -51,14 +56,25 @@ int ballSize = 21;
 int ballColor = GREEN;
 int oldY=ballY;
 
+// Pipe vars
+int pipeX = screenWidth;
+int pipeY = 100;
+int oldPipeY;
+int pipeWidth = 40;
+int pipeSpacing = 80;
+int pipeSpeed = 5;
+
 // Gravity vars
-float gravity = 0.5;
+float gravity = 2;
 float ballSpeedVert = 0;
+int jumpHeight = 10;
+float terminalSpeed = 30;
 
 void setup() {
   Serial.begin(9600);
   delay(300);
   tft.begin();
+  ts.begin();
   tft.setRotation(3);
   //canvas.setTextWrap(false);
   
@@ -79,6 +95,7 @@ byte downPress = LOW;
 byte leftPress = LOW;
 byte aPress = LOW;
 byte bPress = LOW;
+byte touchPress = LOW;
 
 // Storing time when buttons pressed for debouncing
 unsigned long upTime = 0;
@@ -87,6 +104,7 @@ unsigned long downTime = 0;
 unsigned long leftTime = 0;
 unsigned long aTime = 0;
 unsigned long bTime = 0;
+unsigned long touchTime = 0;
 
 unsigned long timeSince = 0;
 
@@ -99,12 +117,12 @@ void loop() {
 void FloppyDerp() {
 
 /********* SETUP BLOCK *********/
-
+  randomSeed(millis());
   drawBackground();
   initScreen();
   while (true) {
     // Display the contents of the current screen
-    if(millis() - timeSince > 35){
+    if(millis() - timeSince > 75){
       timeSince = millis();
       if (Screen == 0) {
         initScreen(); // Initial Screen
@@ -120,12 +138,13 @@ void FloppyDerp() {
       }
     }
       
-    if (checkButton(BUTTON_A, &aPress, &aTime)) { // Press A, play game
+    if (checkButton(digitalRead(BUTTON_A), &aPress, &aTime) || checkButton(ts.touched(), &touchPress, &touchTime)) { // Press A, play game
       if (Screen == 0) { // Initial screen
+        drawBackground();
         Screen=1; // Game screen
       }
       else if (Screen == 1) { // Game screen
-        // Jump
+        jump();
       }
       else if (Screen == 3) { // Pause screen
         if (quitSelect) {
@@ -140,7 +159,7 @@ void FloppyDerp() {
       }
     }
 
-    if (checkButton(BUTTON_B, &bPress, &bTime)) { // Press B to pause
+    if (checkButton(digitalRead(BUTTON_B), &bPress, &bTime)) { // Press B to pause
       if (Screen == 1) { // If in game screen
         tft.fillRect(screenWidth/4, screenHeight/4, screenWidth/2, screenHeight/2, BLACK); // Draw pause menu background
         quitSelect = 0;
@@ -152,13 +171,13 @@ void FloppyDerp() {
       }
     }
 
-    if (checkButton(BUTTON_LEFT, &leftPress, &leftTime)) {
+    if (checkButton(digitalRead(BUTTON_LEFT), &leftPress, &leftTime)) {
       if (Screen == 3) { // If on pause screen
         quitSelect = 0; // Select "Don't return to main menu"
       }
     }
 
-    if (checkButton(BUTTON_RIGHT, &rightPress, &rightTime)) {
+    if (checkButton(digitalRead(BUTTON_RIGHT), &rightPress, &rightTime)) {
       if (Screen == 3) { // If on pause screen
         quitSelect = 1; // Select "Return to main menu"
       }
@@ -169,7 +188,7 @@ void FloppyDerp() {
 
 /********* SCREEN CONTENTS *********/
 void drawBackground() {
-  tft.fillScreen(BLUE);
+  tft.fillScreen(SKY);
 }
 
 void initScreen() {
@@ -178,11 +197,17 @@ void initScreen() {
 void gameScreen() {
   // codes of game screen
   drawBall();
+  drawPipe();
   applyGravity();
   keepInScreen();
+  checkCollision();
 }
 void gameOverScreen() {
-  // codes for game over screen
+  tft.setTextColor(WHITE);
+  tft.setCursor(10, 120);
+  tft.setTextSize(3);
+  tft.print("You suck haha");
+
 }
 
 void pauseScreen() {
@@ -215,7 +240,7 @@ void pauseScreen() {
 }
 
 void drawBall() {
-  tft.drawBitmap(ballX, ballY, ballBitMap, ballSize, ballSize, GREEN, BLUE);
+  tft.drawBitmap(ballX, ballY, ballBitMap, ballSize, ballSize, GREEN, SKY);
   clearBall();
 }
 
@@ -224,48 +249,79 @@ void clearBall() {
   if ((ballY - oldY) < 0) {
     edge = ballY + ballSize;
   }
-    tft.fillRect(ballX, edge, ballSize, abs(ballY - oldY), BLUE);
-    
 
-
+  tft.fillRect(ballX, edge, ballSize, abs(ballY - oldY), SKY);
 }
 
 void applyGravity() {
   ballSpeedVert += gravity;
+  if (ballSpeedVert > terminalSpeed) {
+    ballSpeedVert = terminalSpeed;
+  }
   oldY = ballY;
   ballY += ballSpeedVert;
 }
 
-void makeBounceBottom(float surface) {
-  oldY = ballY;
-  ballY = surface-ballSize;
-  ballSpeedVert*=-1;
-}
 
-void makeBounceTop(float surface) {
-  oldY = ballY;
-  ballY = surface;
-  ballSpeedVert*=-1;
-}
+
+
 // keep ball in the screen
 
 void keepInScreen() {
   // ball hits floor
   if (ballY+ballSize > screenHeight) { 
-    makeBounceBottom(screenHeight);
+    ballY = screenHeight - ballSize;
+    //ballSpeedVert = 0;
   }
   // ball hits ceiling
   if (ballY < 0) {
-    makeBounceTop(0);
+    ballY = 0;
+    //ballSpeedVert = 0;
   }
 }
 
-byte checkButton(int pinNumber, byte *buttonPress, unsigned long *buttonTime) {
+void jump() {
+  ballSpeedVert = -jumpHeight;
+  ballY += ballSpeedVert;
+  keepInScreen();
+}
+
+void drawPipe() {
+  if(pipeX < 0) {
+    pipeX = screenWidth;
+    oldPipeY = pipeY;
+    pipeY = random(20, 180);
+
+  }
+
+  tft.fillRect(pipeX, 0, pipeWidth, pipeY, BLACK);
+  tft.fillRect(pipeX, pipeY+pipeSpacing, pipeWidth, screenHeight, BLACK);
+
+  tft.fillRect(pipeX+pipeWidth, 0, pipeSpeed, pipeY, SKY);
+  tft.fillRect(pipeX+pipeWidth, pipeY+pipeSpacing, pipeSpeed, screenHeight, SKY);
+
+  if(pipeX > screenWidth - pipeWidth) {
+    tft.fillRect((pipeX+pipeWidth-screenWidth), 0, pipeSpeed, oldPipeY, SKY);
+    tft.fillRect((pipeX+pipeWidth-screenWidth), oldPipeY+pipeSpacing, pipeSpeed, screenHeight, SKY);
+  }
+
+
+  pipeX -= pipeSpeed;
+}
+
+void checkCollision() {
+  if((pipeX < ballX+ballSize) && (pipeX+pipeWidth > ballX)) {
+    if((ballY < pipeY) || (ballY+ballSize > pipeY+pipeSpacing)) {
+      drawBall();
+      Screen = 2;
+    }
+  }
+}
+
+byte checkButton(byte buttonInput, byte *buttonPress, unsigned long *buttonTime) {
   // Reads button press with debounce timer, based on debounce routine from arduino docs
   // buttonPress is the current state of the input, buttonTime is the time when the button state last changed from millis()
   // Pass pointers to variables containing button state and time
-
-  byte buttonInput = digitalRead(pinNumber);
 
   if ((millis() - *buttonTime) > 50) {
     if (*buttonPress != buttonInput) {
