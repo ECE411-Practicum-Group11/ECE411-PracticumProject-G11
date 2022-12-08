@@ -10,6 +10,9 @@
 #define DISPLAY_CS 6
 #define DISPLAY_DC 11
 #define DISPLAY_RST 10
+
+#define DISPLAY_LITE 9
+
 #define BUTTON_LEFT A5
 #define BUTTON_UP A4
 #define BUTTON_RIGHT A3
@@ -21,7 +24,10 @@
 Adafruit_ILI9341 tft = Adafruit_ILI9341(DISPLAY_CS, DISPLAY_DC, MOSI, SCK, DISPLAY_RST, MISO);
 
 void setup() {
+  delay(100);
   Serial.begin(19200);
+  pinMode(DISPLAY_LITE, OUTPUT);
+  analogWrite(DISPLAY_LITE, 30);
   tft.begin();
   
   // Print debug text to serial monitor and dispaly

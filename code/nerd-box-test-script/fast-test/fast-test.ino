@@ -31,7 +31,7 @@ void setup() {
   delay(100);
   Serial.begin(19200);
   pinMode(DISPLAY_LITE, OUTPUT);
-  analogWrite(DISPLAY_LITE, 30);
+  analogWrite(DISPLAY_LITE, 255);
   tft.begin();
   
   // Print debug text to serial monitor and dispaly
@@ -111,20 +111,18 @@ byte checkButton(int pinNumber, byte *buttonPress, unsigned long *buttonTime) {
   // Pass pointers to variables containing button state and time
 
   byte buttonInput = digitalRead(pinNumber);
-  if (*buttonPress != buttonInput) {
-    // Record last time button pressed/released
-    *buttonTime = millis();
-  }
 
   if ((millis() - *buttonTime) > 50) {
-    // Change button state after debounce period
-    *buttonPress = buttonInput;
+    if (*buttonPress != buttonInput) {
+      *buttonTime = millis(); // Record last time button pressed/released
+      *buttonPress = buttonInput; // Change button state
 
-      if(*buttonPress == LOW) {
-        // Return true if button is pressed after debounce period
-        tft.setCursor(20, 40);
+      if (*buttonPress == LOW) {
         return 1;
-      }
+      }   
+    }
+
+  return 0;
   }
 
   // Returns false if button state was not changed to HIGH

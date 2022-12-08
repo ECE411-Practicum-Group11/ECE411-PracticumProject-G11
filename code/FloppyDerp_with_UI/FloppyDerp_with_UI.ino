@@ -1,4 +1,6 @@
+// UI + games
 
+// Display libraries
 #include <SPI.h>
 
 // Pin number macro definitions
@@ -28,15 +30,17 @@
 #define    ILI9341_SAVE_SPI_SETTINGS    0
 
 // Initialize display object
-
 #include <PDQ_GFX.h>
 #include <PDQ_ILI9341.h>
 #include <Adafruit_FT6206.h>
 
 PDQ_ILI9341 tft;
 Adafruit_FT6206 ts = Adafruit_FT6206();
-unsigned long int timesTouched = 0;
 
+
+int gameSelect;
+
+// Floppy derp variables
 // Sprite bit map
 const PROGMEM uint8_t ballBitMap[21 * 21] = {
     0x01, 0xfc, 0x00, 0x07, 0xff, 0x00, 0x0f, 0xff, 0x80, 0x1f, 0xff, 0xc0, 0x3f, 0xff, 0xe0, 0x7f, 
@@ -56,7 +60,9 @@ byte scoreUpdated = 0;
 int ballX=screenWidth/5;
 int ballY=screenHeight/4;
 int ballSize = 21;
-int ballColor = GREEN;
+int ballColors[6] = {RED, YELLOW, GREEN, BLUE, MAGENTA, CYAN};
+int ballSelect = 0;
+int ballColor = ballColors[ballSelect+1];
 int oldY=ballY;
 
 // Pipe vars
@@ -65,31 +71,14 @@ int pipeY = 100;
 int oldPipeY;
 int pipeWidth = 40;
 int pipeSpacing = 80;
-int pipeSpeed = 5;
+float pipeSpeed = 5;
+float pipeIncrement = 0.1;
 
 // Gravity vars
 float gravity = 2;
 float ballSpeedVert = 0;
 int jumpHeight = 10;
 float terminalSpeed = 30;
-
-void setup() {
-  Serial.begin(9600);
-  delay(300);
-  tft.begin();
-  ts.begin();
-  tft.setRotation(3);
-  //canvas.setTextWrap(false);
-  
-  // Initialize user button inputs
-  pinMode(BUTTON_LEFT, INPUT_PULLUP);
-  pinMode(BUTTON_UP, INPUT_PULLUP);
-  pinMode(BUTTON_RIGHT, INPUT_PULLUP);
-  pinMode(BUTTON_DOWN, INPUT_PULLUP);
-  pinMode(BUTTON_A, INPUT_PULLUP);
-  pinMode(BUTTON_B, INPUT_PULLUP);
-
-}
 
 // Storing button states for debouncing
 byte upPress = LOW;
@@ -112,19 +101,96 @@ unsigned long touchTime = 0;
 unsigned long timeSince = 0;
 
 byte quitSelect = 0;
+byte quitGame = 0;
 
-void loop() {
-  initializeGame();
-  FloppyDerp();
+// End floppy derp variables
+
+void setup() {
+  Serial.begin(9600);
+  delay(300);
+  tft.begin();
+  ts.begin();
+  tft.setRotation(3);
+
+  // Initialize user button inputs
+  pinMode(BUTTON_LEFT, INPUT_PULLUP);
+  pinMode(BUTTON_UP, INPUT_PULLUP);
+  pinMode(BUTTON_RIGHT, INPUT_PULLUP);
+  pinMode(BUTTON_DOWN, INPUT_PULLUP);
+  pinMode(BUTTON_A, INPUT_PULLUP);
+  pinMode(BUTTON_B, INPUT_PULLUP);
 }
 
-void FloppyDerp() {
+void loop() {
+  mainMenu();
+}
 
-/********* SETUP BLOCK *********/
+void mainMenu() {
+  gameSelect=1; // Reset gameSelect var
+  // Print text to display for UI
+  tft.setRotation(3);
+  tft.fillScreen(BLACK);
+  tft.setCursor(20, 20); // Cursor near top left corner
+  tft.setTextColor(BLUE, YELLOW); // Blue w/ black background to show game selection
+  tft.println("1. Floppy Derp                                  ");
+  tft.setTextColor(RED, BLACK); // Red w/ black background
+  tft.setCursor(20, 35); // Cursor on line below
+  tft.println("2. {Your Game Here!}                            ");
+  
+  while (true) { // Button states
+    if (digitalRead(BUTTON_UP) == LOW && gameSelect != 1) // User selects the game they want to play on startup. Increase the max depending on # of user-added games
+    {
+    gameSelect = gameSelect - 1;
+    tft.setCursor(20, 20); // Cursor to Floppy Derp line on Menu
+    tft.setTextColor(BLUE, YELLOW); // Highlight Floppy Derp in yellow
+    tft.println("1. Floppy Derp                                  ");
+    tft.setCursor(20, 35); // Cursor near top left corner
+    tft.setTextColor(RED, BLACK); // Remove highlight from other menu options
+    tft.println("2. {Your Game Here!}                            ");
+    }
+    else if (digitalRead(BUTTON_DOWN) == LOW && gameSelect != 2)
+    {
+    gameSelect = gameSelect + 1; // Also change the display to highlight, point to, or underline the lower number game
+    tft.setCursor(20, 20); // Cursor to Floppy Derp line on Menu
+    tft.setTextColor(RED, BLACK); // Highlight Floppy Derp in yellow
+    tft.println("1. Floppy Derp                                  ");
+    tft.setCursor(20, 35); // Cursor on line below
+    tft.setTextColor(BLUE, YELLOW); // Highlight Floppy Derp in yellow
+    tft.println("2. {Your Game Here!}                            ");
+    }
+    else if (digitalRead(BUTTON_A) == LOW) // User confirms the game they want to play
+    {
+      break;
+    }
+    }
+  runGame();
+}
+
+void runGame() {
+  if (gameSelect == 1) {
+    FloppyDerp();
+  }
+  else if (gameSelect == 2) { // Play your own game!
+    YourGame1();
+  }
+}
+
+
+
+
+void FloppyDerp() {
+  initializeGame();
+  Screen = 0;
+  /********* SETUP BLOCK *********/
   randomSeed(millis());
   drawBackground();
   initScreen();
   while (true) {
+    if (quitGame) {
+      quitGame = 0;
+      quitSelect = 0;
+      break;
+    }
     // Display the contents of the current screen
     if(millis() - timeSince > 75){
       timeSince = millis();
@@ -152,10 +218,8 @@ void FloppyDerp() {
       }
       else if (Screen == 2) {// Game over screen
         if (quitSelect) {
-          // Return to main menu once game is combined with UI
-          initializeGame();
-          drawBackground();
-          Screen = 0; 
+          // Return to main menu
+          quitGame = 1;
         }
         else {
           drawBackground();
@@ -165,10 +229,8 @@ void FloppyDerp() {
       }
       else if (Screen == 3) { // Pause screen
         if (quitSelect) {
-          // Return to main menu here once game is combined with UI
-          drawBackground();
-          initializeGame();
-          Screen = 0; // For now, just restart game
+          // Return to main menu
+          quitGame = 1;
         }
         else {
           drawBackground();
@@ -190,39 +252,96 @@ void FloppyDerp() {
     }
 
     if (checkButton(digitalRead(BUTTON_LEFT), &leftPress, &leftTime)) {
-      if (Screen == 2 || Screen == 3) { // If on game over or pause screen
+      if (Screen == 0) {
+        // Change ball color selection
+        int arraySize = sizeof(ballColors) / sizeof(ballColors[0]);
+        ballSelect--;
+        ballSelect = (ballSelect + arraySize) % arraySize;
+      }
+      else if (Screen == 2 || Screen == 3) { // If on game over or pause screen
         quitSelect = 0; // Select "Don't return to main menu"
       }
     }
 
     if (checkButton(digitalRead(BUTTON_RIGHT), &rightPress, &rightTime)) {
-      if (Screen == 2 || Screen == 3) { // If on game over or pause screen
+      if (Screen == 0) {
+        // Change ball color selection
+        int arraySize = sizeof(ballColors) / sizeof(ballColors[0]);
+        ballSelect++;
+        ballSelect = (ballSelect + arraySize) % arraySize;
+      }
+      else if (Screen == 2 || Screen == 3) { // If on game over or pause screen
         quitSelect = 1; // Select "Return to main menu"
       }
     }
   }
 }
 
+void YourGame1() {
+  // Code your own game here! If you make more than one game, make sure to add the extra slot and change the GameSelect variable max in mainMenu. Also account for LCD display, etc
+  tft.fillScreen(BLACK); // Clear the screen
+  tft.setCursor(20, 20); // Cursor near top left corner
+  tft.setTextColor(RED, BLACK); // Red
+  tft.println("Code your own game! See code file                 ");
+  tft.setCursor(20, 35); // Cursor near top left corner
+  tft.println("(Press B to return to Main Menu)                ");
+  while (true){
+    if (digitalRead(BUTTON_B) == LOW) {
+    return;
+  }
+  }
+}
 
-/********* SCREEN CONTENTS *********/
+
+
+
+
+/* -------------------------------------------------------
+    FLOPPY DERP STUFF
+   -------------------------------------------------------
+   
+*/
+
 void drawBackground() {
+  // Draw game background when starting or exiting menus
   tft.fillScreen(SKY);
   tft.fillRect(0, 0, screenWidth, borderHeight, BLACK);
 }
 
 void initScreen() {
-  // codes of initial screen graphics
+  // Draw game title
+  tft.setCursor(62, 75);
+  tft.setTextSize(3);
+  tft.setTextColor(ballColor, SKY);
+  tft.print("Floppy Derp");
+  
+  tft.setCursor(65, 130);
+  tft.setTextSize(2);
+  tft.print("Select your derp");
+
+  // Display ball collor selection
+  int arraySize = sizeof(ballColors) / sizeof(ballColors[0]);
+  for(int i = 0; i < arraySize; i++) {
+    tft.drawBitmap(screenWidth*(i+1)/(arraySize+1)-ballSize/2, screenHeight*2/3, ballBitMap, ballSize, ballSize, ballColors[(i+ballSelect)%arraySize], SKY);
+  }
+
+  // Select the second ball that is displayed
+  int selectionX = screenWidth * 2/(arraySize+1) - ballSize/2 - 5;
+  tft.drawRect(selectionX,screenHeight*2/3 - 5, ballSize + 10, ballSize + 10, BLACK); // Draw box around selection
+  ballColor = ballColors[(ballSelect + 1) % arraySize];
 }
+
 void gameScreen() {
-  // codes of game screen
+  // Draw objects and update values each loop
   drawBall();
   drawPipe();
   updateScore();
   applyGravity();
   keepInScreen();
-  checkCollision();
 }
 void gameOverScreen() {
+  // Game over screen
+  // Prompt retry. If no, return to main menu
   tft.setCursor(98, 75);
   tft.setTextSize(2);
   tft.setTextColor(WHITE, BLACK);
@@ -252,6 +371,7 @@ void gameOverScreen() {
 }
 
 void pauseScreen() {
+  // Pause menu to let user return to game selection menu
   tft.setCursor(94, 75);
   tft.setTextSize(2);
   tft.setTextColor(WHITE, BLACK);
@@ -285,11 +405,13 @@ void drawPauseScreen() {
 }
 
 void drawBall() {
-  tft.drawBitmap(ballX, ballY, ballBitMap, ballSize, ballSize, GREEN, SKY);
+  // Draw ball after updating position
+  tft.drawBitmap(ballX, ballY, ballBitMap, ballSize, ballSize, ballColor, SKY);
   clearBall();
 }
 
 void clearBall() {
+  // Erase old ball pixels after updating position
   int edge = oldY;
   if ((ballY - oldY) < 0) {
     edge = ballY + ballSize;
@@ -299,12 +421,15 @@ void clearBall() {
 }
 
 void applyGravity() {
+  // Gravity calculations for ball
+  // Updates ball position and checks for collisions
   ballSpeedVert += gravity;
   if (ballSpeedVert > terminalSpeed) {
     ballSpeedVert = terminalSpeed;
   }
   oldY = ballY;
   ballY += ballSpeedVert;
+  checkCollision();
 }
 
 
@@ -316,71 +441,95 @@ void keepInScreen() {
   // ball hits floor
   if (ballY+ballSize > screenHeight) { 
     ballY = screenHeight - ballSize;
-    //ballSpeedVert = 0;
   }
   // ball hits ceiling
   if (ballY < borderHeight) {
     ballY = borderHeight;
-    //ballSpeedVert = 0;
   }
 }
 
 void jump() {
+  // Makes the ball jump on button press
   ballSpeedVert = -jumpHeight;
   ballY += ballSpeedVert;
   keepInScreen();
 }
 
 void drawPipe() {
-  if(pipeX < 0) {
+  // Draws pipe and erases previous pipe position
+  if(pipeX < -pipeSpeed) {
+    // Makes new pipe once old pipe reaches left side of screen
     pipeX = screenWidth;
-    oldPipeY = pipeY;
+    oldPipeY = pipeY; // Previous pipe position for clearing last bits
     pipeY = random(30, 150);
 
   }
 
+  // Draw pipe
   tft.fillRect(pipeX, borderHeight, pipeWidth, pipeY-borderHeight, BLACK);
   tft.fillRect(pipeX, pipeY+pipeSpacing, pipeWidth, screenHeight-pipeY-pipeSpacing, BLACK);
 
-  tft.fillRect(pipeX+pipeWidth, borderHeight, pipeSpeed, pipeY-borderHeight, SKY);
-  tft.fillRect(pipeX+pipeWidth, pipeY+pipeSpacing, pipeSpeed, screenHeight-pipeY-pipeSpacing, SKY);
+  // Erase previous pipe position
+  tft.fillRect(pipeX+pipeWidth, borderHeight, ceil(pipeSpeed), pipeY-borderHeight, SKY);
+  tft.fillRect(pipeX+pipeWidth, pipeY+pipeSpacing, ceil(pipeSpeed), screenHeight-pipeY-pipeSpacing, SKY);
 
   if(pipeX + pipeSpeed > screenWidth - pipeWidth) {
-    tft.fillRect((pipeX+pipeWidth-screenWidth), borderHeight, pipeSpeed, oldPipeY-borderHeight, SKY);
-    tft.fillRect((pipeX+pipeWidth-screenWidth), oldPipeY+pipeSpacing, pipeSpeed, screenHeight-oldPipeY-pipeSpacing, SKY);
+    // Erase remnants of the last pipe after new one is created
+    tft.fillRect((pipeX+pipeWidth-screenWidth-pipeSpeed), borderHeight, ceil(pipeSpeed), oldPipeY-borderHeight, SKY);
+    tft.fillRect((pipeX+pipeWidth-screenWidth-pipeSpeed), oldPipeY+pipeSpacing, ceil(pipeSpeed), screenHeight-oldPipeY-pipeSpacing, SKY);
   }
 
 
-  pipeX -= pipeSpeed;
+  pipeX -= pipeSpeed; // Move pipe to the left
 }
 
 void checkCollision() {
-  if((pipeX < ballX+ballSize) && (pipeX+pipeWidth > ballX)) {
-    if((ballY < pipeY) || (ballY+ballSize > pipeY+pipeSpacing)) {
+  if ((pipeX < ballX+ballSize) && (pipeX+pipeWidth > ballX)) {
+    // If pipe has reached the ball
+    if (ballY < pipeY) {
+      // If ball is above the pipe
+      ballY = pipeY; // Ball stops at pipe
+      drawBall();
       tft.fillRect(screenWidth/4, screenHeight/4, screenWidth/2, screenHeight/2, BLACK); // Draw pause menu background
+      aTime = millis() + 1200; // Pause inputs for short time on game over
+      touchTime = millis() + 1200;
       quitSelect = 0;
-      Screen = 2;
+      Screen = 2; // Game over screen
+    }
+    if (ballY+ballSize > pipeY+pipeSpacing) {
+      // If ball is below the pipe
+      ballY = pipeY + pipeSpacing - ballSize; // Ball stops at pipe
+      drawBall();
+      tft.fillRect(screenWidth/4, screenHeight/4, screenWidth/2, screenHeight/2, BLACK); // Draw pause menu background
+      aTime = millis() + 1200; // Pause inputs for short time on game over
+      touchTime = millis() + 1200;
+      quitSelect = 0;
+      Screen = 2; // Game over screen
     }
   }
 }
 
 void updateScore() {
   if (!scoreUpdated && pipeX < ballX) {
+    // When ball reaches pipe increment score
     score++;
-    scoreUpdated = 1;
+    pipeSpeed += pipeIncrement; // Make pipes faster as game progresses
+    scoreUpdated = 1; // Stops from incrementing again until after pipe is passed
   }
   if (pipeX > ballX) {
-    scoreUpdated = 0;
+    scoreUpdated = 0; // Once pipe is passed, allow score increase
   }
-  tft.setTextSize(2);
+
+  tft.setTextSize(2); // Update score text
   tft.setTextColor(WHITE, BLACK);
   tft.setCursor(155, 5);
-  if (score > 10) tft.setCursor(145, 30);
-  if (score > 100) tft.setCursor(135, 30);
+  if (score > 9) tft.setCursor(145, 5);
+  if (score > 99) tft.setCursor(135, 5);
   tft.print(score);
 }
 
 void initializeGame() {
+  // Initialize the game variables when restarting
   score = 0;
 
   // Ball vars
@@ -414,4 +563,3 @@ byte checkButton(byte buttonInput, byte *buttonPress, unsigned long *buttonTime)
   // Returns false if button state was not changed to LOW
   return 0;
 }
-
