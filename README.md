@@ -50,7 +50,39 @@ The current license of this practicum project is CREATIVE COMMONS ZERO V1.0 UNIV
 ## How to Download Project & Tools to Use
 1) Go to the project [Repository](https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11)
 
+2) Use one of the following options
+
 ### Option 1: Download ZIP
-Click on the 
+1) Click the GREEN "<>Code" dropdown.
+
+2) Click on "Download ZIP".
+
+3) After the download is complete, unzip the folder using [7zip](https://www.7-zip.org/), [PeaZip](https://peazip.github.io/), [WinZip](https://www.winzip.com/en/), or any other ZIP application.
+
+### Option 2: Git Clone
+If you know how to use Git/GitHub, you can clone the project repository
+1) Click the GREEN "<>Code" dropdown.
+
+2) Copy the https git link.
+
+3) Open git bash on your current machine and move to the directly on your local machine where you would like to clone the project repository to.
+
+4) type the following commands.
+
+```
+git clone [the http git link you copied, yoy can use SHIFT + INSERT for this]
+```
+Now you have a local repository for this project.
+
+You can now access all files and documents of this project
+
+## Tools For this Project
+There are a few software tools that you will need in order to build, modify, or view the files in this project.
+
+For the PCB design schematic, PCB layout, and any other items related to the electronics board, you can use any electronics CAD design and automation software. We highly recommend using [KiCAD EDA](https://www.kicad.org/) for this project, a free, open-source electronics CAD EDA.
+
+For the 3D Printed enclosure the project includes STL files and an AutoDesk Fusion 360 Archive file. We recommend you use [Autodesk Fusion360 CAD](https://www.autodesk.com/products/fusion-360/personal) for the 3D printed enclosure, which is free for personal use.
+
+For software development of the device and coding your own games, we recommend you use [Arduino IDE](https://www.arduino.cc/en/software). We also recommend reading the [tutorial for the 2.8" TFT LCD](https://learn.adafruit.com/adafruit-2-8-and-3-2-color-tft-touchscreen-breakout-v2/overview). We also recommend researching some of the libraries used in the original device program for more optimization (i.e [FloppyDerp_with_UI.ino](https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/tree/main/code/FloppyDerp_with_UI))
 
 ## Assembly, Fabrication, Tests Tips & Notes
