@@ -85,4 +85,17 @@ For the 3D Printed enclosure the project includes STL files and an AutoDesk Fusi
 
 For software development of the device and coding your own games, we recommend you use [Arduino IDE](https://www.arduino.cc/en/software). We also recommend reading the [tutorial for the 2.8" TFT LCD](https://learn.adafruit.com/adafruit-2-8-and-3-2-color-tft-touchscreen-breakout-v2/overview). We also recommend researching some of the libraries used in the original device program for more optimization (i.e [FloppyDerp_with_UI.ino](https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/tree/main/code/FloppyDerp_with_UI))
 
+__IMPORTANT NOTE:__ If you plan to use Arduino IDE to upload your own programs and create your own code, you MUST burn the arduino IDE Bootloader to the ATmega32U4 Microcontroller in the project. We HIGHLY recommend you use an Arduino as an ISP for burning the bootloader to the IC. You can follow a tutorial on how to set this up and the burning process at [Arduino as ISP and Arduino Bootloaders](https://docs.arduino.cc/built-in-examples/arduino-isp/ArduinoISP).
+
+__IMPORTANT NOTE:__ If you plan to use Arduino IDE to create code and upload to the Nerd Box, PLEASE set the "Board" under "Tools" dropdown to "Arduino Leonardo"!
+
+## POWERING THE DEVICE!
+....
+
 ## Assembly, Fabrication, Tests Tips & Notes
+
+* We recommend using [Oshpark](https://oshpark.com/) to have your own PCBs fabricated and using [Digi-Key](https://www.digikey.com/) for components.
+* If you have a 3D printer or printer service with fine detail/quality, you can modify the 3D enclosure with labels. Otherwise, you can use [decals](https://www.youtube.com/watch?v=YWCaCXiLDwo&t=260s&ab_channel=Tim%27sProjects) on the 3D Prints.
+* The recommended screw size and type is a M2.2, self-tapping flat head screw that is roughly 16mm to 19mm in length. Here are some recommendations from McMaster-Carr: [Link 1](https://www.mcmaster.com/catalog/128/3273), [Link 2](https://www.mcmaster.com/catalog/128/3273)
+* If you are planning to assemble the PCB yourself, we recommend that you solder a subcircuit first and then test with a bench power supply, then test with the LiPo battery. This ensures that everything will operate as expected. The order we recommend from the design schematics are: 3.3V Linear Regulator, LiPo Charger, USB Input Programming & Power, ATmega32U4 + ICSP, the rest of the components. Solder the LCD LAST! Also the board contains different test points. Reference the schematic on what each one does and utilize them in your testing!
+* 
