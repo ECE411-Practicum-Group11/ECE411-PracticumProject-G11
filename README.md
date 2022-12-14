@@ -42,9 +42,7 @@ For more system architecture details, go to the [411documents](https://github.co
   <img src="https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/blob/main/411documents/toplevel(level0)blockdiagram.drawio.png">
 </p>
 
-## Demonstration & Operations Video
-...
-
+## [Demonstration & Operations Video Link](https://www.youtube.com/playlist?list=PLfQtabAE1AbKebFBLS851gg_HdHH0sS15)
 
 ## License
 The current license of this practicum project is CREATIVE COMMONS ZERO V1.0 UNIVERSAL. This is an Open-Source License and this project is dedicated to the public domain. This project can be copied, modified, distributed, and performance of work (including commercial purposes) without asking for permission. For more information on CC0 1.0 Universal - Public Domain Dedication, please follow this link: https://creativecommons.org/publicdomain/zero/1.0/
