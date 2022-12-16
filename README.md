@@ -70,7 +70,7 @@ If you know how to use Git/GitHub, you can clone the project repository
 4) type the following commands.
 
 ```
-git clone [the http git link you copied, yoy can use SHIFT + INSERT for this]
+git clone [the http git link you copied, you can use SHIFT + INSERT for this]
 ```
 Now you have a local repository for this project.
 
