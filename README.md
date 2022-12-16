@@ -90,7 +90,12 @@ __IMPORTANT NOTE:__ If you plan to use Arduino IDE to upload your own programs a
 __IMPORTANT NOTE:__ If you plan to use Arduino IDE to create code and upload to the Nerd Box, PLEASE set the "Board" under "Tools" dropdown to "Arduino Leonardo"!
 
 ## POWERING THE DEVICE!
-....
+The Nerd Box has two ways to power the device:
+1) Power using LiPo Battery:
+The Nerd Box can be powered using a LiPo battery with a JST connector on the back of the PCB. We recommend using a 3.7V, 2000mAh battery. [This one from Adafruit](https://www.adafruit.com/product/2011) is the best since it fits in the chassis and supplies around 40 hours of power to the Nerd Box.
+
+2) Power over USB:
+The Nerd Box can also be powered directly over the USB connection. When the Nerd Box's USB is connected, if there is a LiPo battery attached then the LiPo battery will be charged up. THIS IS HOW YOU CHARGE THE LIPO BATTERY IN THE DEVICE. Again the USB serves as a way of charging the LiPo battery and programming/uploading games to the device. The Nerd Box can be powered over the USB without the LiPo battery as well.
 
 ## Assembly, Fabrication, Tests Tips & Notes
 
