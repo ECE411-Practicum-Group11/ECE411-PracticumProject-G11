@@ -7,7 +7,7 @@ Fall 2022 ECE 411 Practicum Project
 
 # NERD BOX - A Handheld Video Game Console
 <p align="center">
-  <img src="https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/blob/main/411documents/unrendered_nerdboxenclosure.PNG">
+  <img src="https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/blob/main/media/Capture5.png">
 </p>
   
 ## Description:
