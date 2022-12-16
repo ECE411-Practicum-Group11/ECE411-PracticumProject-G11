@@ -36,7 +36,7 @@ This handheld game console was designed with a simple user interface and at a af
 * Team Information - A markdown file that contains information about the team members of this practicum project.
 
 ## System Architecture - Block Diagrams
-For more system architecture details, go to the [411documents](https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/tree/main/411documents) folder in this repsitory and view the [G11_L1blockDiagram.pdf](https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/blob/main/411documents/G11_L1_blockDiagrams.pdf) 
+For more system architecture details, go to the [411documents](https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/tree/main/411documents) folder in this repsitory and view the G11_L1blockDiagram.pdf
 
 <p align="center">
   <img src="https://github.com/ECE411-Practicum-Group11/ECE411-PracticumProject-G11/blob/main/411documents/toplevel(level0)blockdiagram.drawio.png">
